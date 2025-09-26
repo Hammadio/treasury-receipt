@@ -1,0 +1,27 @@
+TREASURY RECEIPT
+================
+Account: DoF-Treasury - Central Treasury - Cash Office - USD Current Bank Acct No.1 - Current operations
+Amount: 19,271,695.10 (Debit)
+Transaction Type: Unknown
+Additional Processing Required: Yes
+
+TREASURY RECEIPT
+================
+Account: DoF-Treasury - Central Treasury - Aid/Special Payment Section - Loan Repayments from Senegal - Current operations
+Amount: 510,481.89 (Credit)
+Transaction Type: Principal Repayment
+Additional Processing Required: Yes
+
+TREASURY RECEIPT
+================
+Account: DoF-Treasury - Central Treasury - Aid/Special Payment Section - Interest - Foreign Govt loans - Current operations
+Amount: 18,692,722.10 (Credit)
+Transaction Type: Interest
+Additional Processing Required: No
+
+TREASURY RECEIPT
+================
+Account: DoF-Treasury - Central Treasury - Aid/Special Payment Section - Loan Repayments from Pakistan - Current operations
+Amount: 68,491.11 (Credit)
+Transaction Type: Principal Repayment
+Additional Processing Required: Yes
