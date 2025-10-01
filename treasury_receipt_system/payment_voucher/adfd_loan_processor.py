@@ -68,8 +68,11 @@ class ADFDLoanProcessor:
                     # Only process rows where Statement of Shares = "Total"
                     if row.get('Statement of Shares', '').strip() == 'Total':
                         try:
+                            # Handle BOM character in column names
+                            project_no = row.get('Project no', '') or row.get('\ufeffProject no', '')
+                            
                             loan_data = ADFDLoanData(
-                                project_no=row.get('Project no', '').strip(),
+                                project_no=project_no.strip(),
                                 country_name=row.get('Country Name', '').strip(),
                                 statement_of_shares=row.get('Statement of Shares', '').strip(),
                                 total=float(row.get('Total', '0').strip())
@@ -132,9 +135,14 @@ class ADFDLoanProcessor:
         # Calculate total funding amount (sum of all country totals)
         total_funding = sum(group.total_amount for group in self.loan_groups)
         
-        # Create description
+        # Create description with project numbers
         project_countries = [f"{group.country_name} Loan {group.project_no}" for group in self.loan_groups]
         description = f"{' & '.join(project_countries)} Repayments - Funding Entries {datetime.now().year}"
+        
+        # Debug logging
+        LOGGER.info(f"Loan groups: {[(g.project_no, g.country_name, g.total_amount) for g in self.loan_groups]}")
+        LOGGER.info(f"Project countries: {project_countries}")
+        LOGGER.info(f"Final description: {description}")
         
         # 1. Funding entry (Debit)
         funding_entry = ADFDLoanVoucherEntry(
