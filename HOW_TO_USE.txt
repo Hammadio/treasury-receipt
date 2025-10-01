@@ -1,0 +1,35 @@
+conda activate myenv-DoF-EFA-23sept25
+
+set LLM_ENDPOINT=http://localhost:11434/v1
+set LLM_MODEL=qwen3:4b
+python -m treasury_receipt_system.main --excel ADERP_COA_2025.xlsx --input-file sample_input.txt --output-file receipt.txt --debug --no-llm
+
+
+
+If --no-llm is USED in the command line, heuristic classification is being used.
+If --no-llm is NOT USED in the command line, LLM-based classification is being used. The LLM model is in env variable.
+
+
+
+
+Heuristic classification (when --no-llm or LLM unavailable)
+
+Looks only at the GL account description string.
+Rules:
+If description contains any of: “interest”, “coupon”, “yield” → classify as Interest.
+Else if contains any of: “principal”, “loan repayment”, “amortization”, “capital repayment” → classify as Principal Repayment.
+Else → Unknown (flagged for manual review).
+Deterministic, fast, reproducible; no external calls.
+
+
+LLM-based classification (default when an endpoint is set)
+Sends the GL account description to your local OpenAI-compatible endpoint (e.g., Ollama/vLLM) with:
+System prompt: instructs the model to output exactly one label: Interest, Principal Repayment, or Unknown.
+Temperature 0.0, max_tokens 5 for consistent, short outputs.
+Parses the model’s text; maps to the three labels. If the HTTP call fails or the answer is unusable → falls back to heuristics.
+You control the model via env vars LLM_ENDPOINT and LLM_MODEL; Fully On-Prem, No cloud used.
+After classification (both modes)
+Interest → direct Treasury Receipt.
+Principal Repayment → flag “Additional Processing Required: Yes”.
+
+Unknown → flagged for manual review.
